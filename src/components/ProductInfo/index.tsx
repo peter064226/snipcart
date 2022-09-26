@@ -21,11 +21,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-type A = { a1: number };
-type B = A & { b1: number; b2: number };
-const b: B = { a1: 1, b1: 1, b2: 1 };
-console.log(b);
-
 export type ProductInfoProps = {
   id: number;
   name: string;
@@ -90,7 +85,6 @@ const ProductInfo: React.FC<
             </Center>
           </GridItem>
           <GridItem>
-            {/* <Button w="full">ADD TO CART</Button> */}
             <Button onClick={onOpen} w="full">
               ADD TO CART
             </Button>

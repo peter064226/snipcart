@@ -30,6 +30,22 @@ const Products: ProductInfoProps[] = [
     price: 49.95,
     photo: "https://demo.snipcart.com/images/rosy.jpg",
   },
+  {
+    id: 3,
+    name: "Rosy-Fingered Dawn at Louse Point",
+    desc: `The title Rosy-Fingered Dawn at Louse Point refers to one of Willem de Kooning's favourite places in Long Island.`,
+    inventory: 10,
+    price: 49.95,
+    photo: "https://demo.snipcart.com/images/rosy.jpg",
+  },
+  {
+    id: 4,
+    name: "Rosy-Fingered Dawn at Louse Point",
+    desc: `The title Rosy-Fingered Dawn at Louse Point refers to one of Willem de Kooning's favourite places in Long Island.`,
+    inventory: 10,
+    price: 49.95,
+    photo: "https://demo.snipcart.com/images/rosy.jpg",
+  },
 ];
 
 const Home: NextPage = () => {
@@ -38,7 +54,7 @@ const Home: NextPage = () => {
   const { onOpen } = disclosure;
 
   return (
-    <Container maxW={"container.lg"}>
+    <Container maxW="container.lg">
       <Flex justifyContent="flex-end" py={5}>
         <header>
           <Button onClick={toggleColorMode}>
