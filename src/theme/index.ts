@@ -25,6 +25,10 @@ const formItemStyle = {
   },
 };
 
+const globalFontWeight = {
+  fontWeight: "300 !important",
+};
+
 const myTheme = extendTheme(
   {
     colors: {
@@ -40,6 +44,18 @@ const myTheme = extendTheme(
         800: "#3c5e00",
         900: "#203300",
       },
+    },
+    styles: {
+      global: () => ({
+        h2: globalFontWeight,
+        div: globalFontWeight,
+        label: globalFontWeight,
+        input: globalFontWeight,
+        select: globalFontWeight,
+        option: globalFontWeight,
+        a: globalFontWeight,
+        button: globalFontWeight,
+      }),
     },
     components: {
       NumberInput: formItemStyle,

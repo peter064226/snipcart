@@ -1,3 +1,4 @@
+import type { useDisclosure } from "@chakra-ui/react";
 import {
   Box,
   Button,
@@ -20,6 +21,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
+type A = { a1: number };
+type B = A & { b1: number; b2: number };
+const b: B = { a1: 1, b1: 1, b2: 1 };
+console.log(b);
+
 export type ProductInfoProps = {
   id: number;
   name: string;
@@ -29,14 +35,9 @@ export type ProductInfoProps = {
   photo: string;
 };
 
-const ProductInfo: React.FC<ProductInfoProps> = ({
-  id,
-  name,
-  desc,
-  inventory,
-  price,
-  photo,
-}) => {
+const ProductInfo: React.FC<
+  ProductInfoProps & Partial<ReturnType<typeof useDisclosure>>
+> = ({ id, name, desc, inventory, price, photo, onOpen }) => {
   return (
     <Flex
       w="full"
@@ -49,7 +50,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         spacing={5}
       >
         <Heading>{name}</Heading>
-        <Text fontWeight="semibold">{desc}</Text>
+        <Text>{desc}</Text>
         <SimpleGrid
           columns={{ base: 1, md: 2 }}
           w="full"
@@ -89,7 +90,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             </Center>
           </GridItem>
           <GridItem>
-            <Button w="full" fontWeight="200">
+            {/* <Button w="full">ADD TO CART</Button> */}
+            <Button onClick={onOpen} w="full">
               ADD TO CART
             </Button>
           </GridItem>

@@ -4,9 +4,11 @@ import {
   Container,
   Flex,
   useColorMode,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
+import CartDrawer from "../src/components/CartDrawer";
 import type { ProductInfoProps } from "../src/components/ProductInfo";
 import ProductInfo from "../src/components/ProductInfo";
 
@@ -32,21 +34,24 @@ const Products: ProductInfoProps[] = [
 
 const Home: NextPage = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const disclosure = useDisclosure();
+  const { onOpen } = disclosure;
 
   return (
     <Container maxW={"container.lg"}>
       <Flex justifyContent="flex-end" py={5}>
         <header>
-          <Button onClick={toggleColorMode} fontWeight="200">
+          <Button onClick={toggleColorMode}>
             Toggle {colorMode === "light" ? "Dark" : "Light"}
           </Button>
         </header>
       </Flex>
       <VStack spacing={10}>
         {Products.map((product) => (
-          <ProductInfo key={product.id} {...product} />
+          <ProductInfo key={product.id} {...product} onOpen={onOpen} />
         ))}
       </VStack>
+      <CartDrawer {...disclosure} products={Products} />
       <Box h="500" />
     </Container>
   );
