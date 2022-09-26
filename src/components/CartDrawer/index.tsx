@@ -33,12 +33,16 @@ import React, { useState } from "react";
 import type { ProductInfoProps } from "../ProductInfo";
 
 export type CartDrawerProps = {
-  products: ProductInfoProps[];
+  cart: ProductInfoProps[];
 };
 
 const CartDrawer: React.FC<
-  CartDrawerProps & ReturnType<typeof useDisclosure>
-> = ({ products, isOpen, onOpen, onClose }) => {
+  CartDrawerProps &
+    ReturnType<typeof useDisclosure> & {
+      updateQuantity: (id: number, quantity: number) => void;
+      removeProduct: (product: ProductInfoProps) => void;
+    }
+> = ({ cart, isOpen, onOpen, onClose, updateQuantity, removeProduct }) => {
   const [size, setSize] = useState<"md" | "full">("md");
   const isFull = size === "full";
   const bgColor = useColorModeValue("white", "gray.700");
@@ -50,14 +54,14 @@ const CartDrawer: React.FC<
       {isFull && <Spacer />}
       <VStack w={isFull ? "md" : "full"} spacing="4">
         <Flex w="full">
-          <Text>Shipping and taxes will be calculated at checkout</Text>
-          <Spacer />
-          <Center>-$49.98</Center>
-        </Flex>
-        <Flex w="full">
           <Text>Total</Text>
           <Spacer />
-          <Text>$704.87</Text>
+          <Text>
+            $
+            {cart.reduce((sum, { quantity: qt, price }) => {
+              return sum + qt * price;
+            }, 0)}
+          </Text>
         </Flex>
         <Button
           w="full"
@@ -110,7 +114,13 @@ const CartDrawer: React.FC<
               ) : (
                 <Flex h="20" mb="3" alignItems="center">
                   <Center>
-                    <Button variant="ghost">
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        onClose();
+                        setSize("md");
+                      }}
+                    >
                       <ArrowBackIcon mr="2" color="brand.500" />
                       Continue shopping
                     </Button>
@@ -125,56 +135,87 @@ const CartDrawer: React.FC<
                 spacing={isFull ? 6 : 8}
                 divider={isFull ? undefined : <Divider />}
               >
-                {products.map(({ id, name, photo, inventory, desc }) => (
-                  <VStack
-                    w="full"
-                    spacing="4"
-                    key={id}
-                    bg={bgColor}
-                    p={isFull ? 6 : 0}
-                    boxShadow={
-                      isFull ? "0 20px 24px -20px rgb(0 0 0 / 10%)" : "none"
-                    }
-                  >
-                    <Flex w="full">
-                      <HStack spacing="4">
-                        <Image
-                          h={isFull ? "28" : "10"}
-                          src={photo}
-                          alt="naruto"
-                          objectFit="cover"
-                        />
-                        <VStack alignItems="flex-start">
-                          <Text fontSize={isFull ? "20" : "16"}>{name}</Text>
-                          {isFull && <Text fontSize="14">{desc}</Text>}
-                        </VStack>
-                      </HStack>
-                      <Spacer />
-                      <Center>
-                        <Button variant="link">
-                          <Avatar
-                            bg="brand.100"
-                            icon={<DeleteIcon color="brand.500" />}
-                          />
-                        </Button>
-                      </Center>
-                    </Flex>
-                    <Flex w={isFull ? "xs" : "full"} alignSelf="flex-end">
-                      <FormControl w="50%">
-                        <FormLabel fontSize={12}>QUANTITY</FormLabel>
-                        <NumberInput defaultValue={1} min={1} max={inventory}>
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      </FormControl>
-                      <Spacer />
-                      <Center pt="6">$704.87</Center>
-                    </Flex>
-                  </VStack>
-                ))}
+                {cart.length ? (
+                  cart.map(
+                    ({ id, name, photo, inventory, desc, quantity, price }) => (
+                      <VStack
+                        w="full"
+                        spacing="4"
+                        key={id}
+                        bg={bgColor}
+                        p={isFull ? 6 : 0}
+                        boxShadow={
+                          isFull ? "0 20px 24px -20px rgb(0 0 0 / 10%)" : "none"
+                        }
+                      >
+                        <Flex w="full">
+                          <HStack spacing="4">
+                            <Image
+                              h={isFull ? "28" : "10"}
+                              src={photo}
+                              alt="naruto"
+                              objectFit="cover"
+                            />
+                            <VStack alignItems="flex-start">
+                              <Text fontSize={isFull ? "20" : "16"}>
+                                {name}
+                              </Text>
+                              {isFull && <Text fontSize="14">{desc}</Text>}
+                            </VStack>
+                          </HStack>
+                          <Spacer />
+                          <Center>
+                            <Button
+                              variant="link"
+                              onClick={() =>
+                                removeProduct({
+                                  id,
+                                  name,
+                                  photo,
+                                  inventory,
+                                  desc,
+                                  quantity,
+                                  price,
+                                })
+                              }
+                            >
+                              <Avatar
+                                bg="brand.100"
+                                icon={<DeleteIcon color="brand.500" />}
+                              />
+                            </Button>
+                          </Center>
+                        </Flex>
+                        <Flex w={isFull ? "xs" : "full"} alignSelf="flex-end">
+                          <FormControl w="50%">
+                            <FormLabel fontSize={12}>QUANTITY</FormLabel>
+                            <NumberInput
+                              defaultValue={1}
+                              min={1}
+                              max={inventory}
+                              value={quantity}
+                              onChange={(val) =>
+                                updateQuantity(id, parseInt(val))
+                              }
+                            >
+                              <NumberInputField />
+                              <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                              </NumberInputStepper>
+                            </NumberInput>
+                          </FormControl>
+                          <Spacer />
+                          <Center pt="6">${price}</Center>
+                        </Flex>
+                      </VStack>
+                    )
+                  )
+                ) : (
+                  <Center color="gray.300" h="80">
+                    no data
+                  </Center>
+                )}
               </VStack>
               {isFull && (
                 <Box pt="20" pb="32">
