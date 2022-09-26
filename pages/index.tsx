@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Container,
   Flex,
@@ -36,7 +37,7 @@ const Home: NextPage = () => {
     <Container maxW={"container.lg"}>
       <Flex justifyContent="flex-end" py={5}>
         <header>
-          <Button onClick={toggleColorMode}>
+          <Button onClick={toggleColorMode} fontWeight="200">
             Toggle {colorMode === "light" ? "Dark" : "Light"}
           </Button>
         </header>
@@ -46,6 +47,7 @@ const Home: NextPage = () => {
           <ProductInfo key={product.id} {...product} />
         ))}
       </VStack>
+      <Box h="500" />
     </Container>
   );
 };
