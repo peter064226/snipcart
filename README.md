@@ -2,7 +2,7 @@
 
 ## **preview on github pages**
 
-[https://peter064226.github.io/snipcart/]
+[https://peter064226.github.io/snipcart](https://peter064226.github.io/snipcart)
 
 ## **Requirements**
 
