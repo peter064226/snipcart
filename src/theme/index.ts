@@ -58,6 +58,7 @@ const myTheme = extendTheme(
       }),
     },
     components: {
+      Input: formItemStyle,
       NumberInput: formItemStyle,
       Select: formItemStyle,
       Button: {

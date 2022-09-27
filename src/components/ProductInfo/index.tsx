@@ -19,6 +19,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import React, { useState } from "react";
 
 export type ProductInfoProps = {
   id: number;
@@ -35,17 +36,9 @@ const ProductInfo: React.FC<
     onOpen: () => void;
     addProduct: (product: ProductInfoProps) => void;
   }
-> = ({
-  id,
-  name,
-  desc,
-  inventory,
-  price,
-  photo,
-  quantity,
-  onOpen,
-  addProduct,
-}) => {
+> = ({ id, name, desc, inventory, price, photo, onOpen, addProduct }) => {
+  const [quantity, setQuantity] = useState(1);
+
   return (
     <Flex
       w="full"
@@ -68,7 +61,13 @@ const ProductInfo: React.FC<
           <GridItem>
             <FormControl>
               <FormLabel fontSize={12}>QUANTITY</FormLabel>
-              <NumberInput defaultValue={1} min={1} max={inventory}>
+              <NumberInput
+                value={quantity}
+                onChange={(val) => setQuantity(parseInt(val))}
+                defaultValue={1}
+                min={1}
+                max={inventory}
+              >
                 <NumberInputField />
                 <NumberInputStepper>
                   <NumberIncrementStepper />

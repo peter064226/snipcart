@@ -5,6 +5,7 @@ import {
   Flex,
   useColorMode,
   useDisclosure,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
@@ -40,12 +41,22 @@ const Home: NextPage = () => {
   const disclosure = useDisclosure();
   const { onOpen } = disclosure;
   const [cart, setCart] = useState<ProductInfoProps[]>([]);
+  const toast = useToast();
 
   const updateQuantity = (id: number, quantity: number) => {
     setCart([
       ...cart.map((product) => {
-        if (product.id === id && quantity <= product.inventory) {
-          return { ...product, quantity };
+        if (product.id === id) {
+          if (quantity > product.inventory) {
+            toast({
+              title: `insufficient inventory`,
+              status: "error",
+              isClosable: true,
+            });
+            return product;
+          } else {
+            return { ...product, quantity };
+          }
         } else {
           return product;
         }
@@ -56,9 +67,12 @@ const Home: NextPage = () => {
   const addProduct = (product: ProductInfoProps) => {
     const currentProduct = cart.find((prod) => prod.id === product.id);
     if (currentProduct) {
-      updateQuantity(currentProduct.id, currentProduct.quantity + 1);
+      updateQuantity(
+        currentProduct.id,
+        currentProduct.quantity + product.quantity
+      );
     } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
+      setCart([...cart, { ...product }]);
     }
   };
 
@@ -70,9 +84,14 @@ const Home: NextPage = () => {
     <Container maxW="container.lg">
       <Flex justifyContent="flex-end" py={5}>
         <header>
-          <Button onClick={toggleColorMode}>
+          <Button
+            onClick={toggleColorMode}
+            borderRight="1px solid"
+            borderRightColor="brand.400"
+          >
             Toggle {colorMode === "light" ? "Dark" : "Light"}
           </Button>
+          <Button onClick={onOpen}>Cart</Button>
         </header>
       </Flex>
       <VStack spacing={10}>
