@@ -1,5 +1,9 @@
 # **React Shopping Cart Coding Challenge**
 
+## **preview on github pages**
+
+[https://peter064226.github.io/snipcart/]
+
 ## **Requirements**
 
 - Create a react based shopping cart that can slide out like a drawer based on snipcart. Example: [https://demo.snipcart.com](https://demo.snipcart.com/)
